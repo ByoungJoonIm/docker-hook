@@ -28,7 +28,10 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         logging.info("Path: %s", self.path)
-        header_length = int(self.headers.getheader('content-length', "0"))
+        if hasattr(self.headers, 'getheader'):
+            header_length = int(self.headers.getheader('content-length', "0"))
+        else:
+            header_length = int(self.headers.get('content-length', "0"))
         json_payload = self.rfile.read(header_length)
         env = dict(os.environ)
         json_params = {}
